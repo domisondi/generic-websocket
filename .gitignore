@@ -1,0 +1,11 @@
+platforms/
+plugins/
+node_modules/
+nbproject/private/
+./package-lock.json
+dist/
+.vs/
+obj/
+Ghost.njsproj
+package-lock.json
+npm-debug.log

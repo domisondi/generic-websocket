@@ -8,8 +8,8 @@
   },
   "description": "A generic websocket server",
   "dependencies": {
-    "express": "^4.15.2",
-    "socket.io": "^1.7.3"
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
   },
   "scripts": {
     "start": "node index.js"
