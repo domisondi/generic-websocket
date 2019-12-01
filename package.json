@@ -1,0 +1,17 @@
+{
+  "name": "generic-websocket",
+  "displayName": "Generic Websocket",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://the.hidden.tools/dominic/generic-websocket.git"
+  },
+  "description": "A generic websocket server",
+  "dependencies": {
+    "express": "^4.15.2",
+    "socket.io": "^1.7.3"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
