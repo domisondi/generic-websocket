@@ -1,8 +1,9 @@
 var request = require('request');
 
 module.exports = function(url, data, callback){
-	request.post(url, {
-  		formData: data
+	request.post({
+		url: url,
+  		form: data
 	}, (error, res, body) => {
   		if (error) {
     		return callback(null);
@@ -11,6 +12,6 @@ module.exports = function(url, data, callback){
   		try {
   			body = JSON.parse(body);
   		} catch(ex) {}
-  		return callback();
+  		return callback(body);
 	});
 }

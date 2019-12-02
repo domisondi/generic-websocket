@@ -72,13 +72,13 @@ io.on('connection', function(socket){
 	
 		// add to connections array
 		connections.push(connection);
-	});
-	
-	// handle disconnect
-	socket.on('disconnect', () => {
-		// remove the connection
-		var index = connections.indexOf(connection);
-		if(index > -1) connections.splice(index, 1);
+		
+		// handle disconnect
+		socket.on('disconnect', () => {
+			// remove the connection
+			var index = connections.indexOf(connection);
+			if(index > -1) connections.splice(index, 1);
+		});
 	});
 });
 
