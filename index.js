@@ -6,7 +6,8 @@ var Connection = require('./Connection');
 var User = require('./User');
 
 // create the http and websocket server
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http, config.socket_io);
 var port = process.env.PORT || config.port;
