@@ -1,3 +1,9 @@
+// load dependencies
+var express = require('express');
+var cookie = require('cookie');
+var _ = require('underscore');
+var postrequest = require('./postrequest.js');
+
 // load the config
 var config = require('./config.js');
 
@@ -6,7 +12,6 @@ var Connection = require('./Connection');
 var User = require('./User');
 
 // create the http and websocket server
-var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http, config.socket_io);
@@ -44,27 +49,30 @@ app.post(config.broadcast_route, function(req, res){
 // on new connection
 io.on('connection', function(socket){
 	// authenticate with the cookie
-	var all_cookies = socket.handshake.headers.cookie;
+	var all_cookies = cookie.parse(socket.handshake.headers.cookie || '');
 	
 	// get auth cookie
-	// TODO: GET CORRECT COOKIE
-	var auth_cookie = null;
+	var auth_cookie = _.find(all_cookies, (c, name) => {
+		return config.auth_cookie_full ? name === config.auth_cookie : name.startsWith(config.auth_cookie);
+	});
 	
-	// TODO: MAKE POST REQUEST TO VERIFY COOKIE
-	var id = null;
+	// get id and allowed message types
+	postrequest(config.auth_url, {cookie: auth_cookie}, result => {
+		// get id
+		var id = result.id;
 	
-	// get types
-	// TODO: GET TYPES COOKIE
-	var types = ['all'];
+		// get types
+		var types = result.types;
 	
-	// create new user object
-	var user = new User(id, types);
+		// create new user object
+		var user = new User(id, types);
 
-	// create new connection object
-	var connection = new Connection(socket, user);
+		// create new connection object
+		var connection = new Connection(socket, user);
 	
-	// add to connections array
-	connections.push(connection);
+		// add to connections array
+		connections.push(connection);
+	});
 	
 	// handle disconnect
 	socket.on('disconnect', () => {
