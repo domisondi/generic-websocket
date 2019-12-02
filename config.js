@@ -4,5 +4,5 @@ module.exports = {
 	socket_io: {path: '/websocket'},
 	emit_event: 'relay',
 	broadcast_route: '/websocket',
-	allowed_broadcast_ips: ["127.0.0.1", "::1", "::ffff:127.0.0.1", "192.168.160.5", "::ffff:192.168.160.5"]
+	allowed_broadcast_ips: ["127.0.0.1", "::1", "::ffff:127.0.0.1", "192.168.123.5", "::ffff:192.168.123.5"]
 };
