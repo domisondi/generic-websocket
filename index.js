@@ -21,10 +21,10 @@ var connections = [];
 
 // server broadcast route
 app.post(config.broadcast_route, function(req, res){
-	// TODO: check if request comes from localhost
-	/*if(!["127.0.0.1", "::1", "::ffff:127.0.0.1"].includes(req.connection.remoteAddress)) {
+	// check if request comes from an allowed ip
+	if(!config.allowed_broadcast_ips.includes(req.connection.remoteAddress)) {
 		return res.end();
-	}*/
+	}
 
 	// get the data
 	var data = req.body;
