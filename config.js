@@ -3,5 +3,5 @@ module.exports = {
 	is_behind_proxy: true,
 	socket_io: {path: '/websocket'},
 	emit_event: 'relay',
-	broadcast_route: '/broadcast'
+	broadcast_route: '/websocket'
 };
