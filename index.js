@@ -58,7 +58,7 @@ io.on('connection', function(socket){
 	
 	// get id and allowed message types
 	var scheme = socket.handshake.secure ? 'https' : (socket.handshake.headers['x-forwarded-scheme'] || 'http')
-	var auth_url = scheme + '://' + socket.handshake.headers.host + config.auth_url;
+	var auth_url = config.auth_full_url ? config.auth_url : (scheme + '://' + socket.handshake.headers.host + config.auth_url);
 	postrequest(auth_url, {cookie: auth_cookie}, result => {
 		// get id
 		var id = result.id;
