@@ -62,7 +62,7 @@ io.on('connection', function(socket){
 	});
 
 	// log new connection
-	console.log('connection: ', auth_cookie);
+	console.log('connection: ', auth_cookie ? "logged in" : "anonymous");
 	
 	// get id and allowed message types
 	var scheme = socket.handshake.secure ? 'https' : (socket.handshake.headers['x-forwarded-scheme'] || 'http')
