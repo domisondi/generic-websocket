@@ -28,11 +28,16 @@ var connections = [];
 app.post(config.broadcast_route, function(req, res){
 	// check if request comes from an allowed ip
 	if(!config.allowed_broadcast_ips.includes(req.connection.remoteAddress)) {
+		// not allowed
+		console.log('Broadcast not allowed from ' + req.connection.remoteAddress);
 		return res.end();
 	}
 
 	// get the data
 	var data = req.body;
+
+	// log the broadcast
+	console.log('Broadcasting: ', data);
 
 	// broadcast to all connections
 	connections.forEach(connection => {
@@ -55,6 +60,9 @@ io.on('connection', function(socket){
 	var auth_cookie = _.find(all_cookies, (c, name) => {
 		return config.auth_cookie_full ? name === config.auth_cookie : name.startsWith(config.auth_cookie);
 	});
+
+	// log new connection
+	console.log('connection: ', auth_cookie);
 	
 	// get id and allowed message types
 	var scheme = socket.handshake.secure ? 'https' : (socket.handshake.headers['x-forwarded-scheme'] || 'http')
@@ -68,6 +76,9 @@ io.on('connection', function(socket){
 	
 		// create new user object
 		var user = new User(id, types);
+
+		// log the user
+		console.log('user: ', user);
 
 		// create new connection object
 		var connection = new Connection(socket, user);
