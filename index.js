@@ -42,7 +42,7 @@ app.post(config.broadcast_route, function(req, res){
 	// broadcast to all connections
 	connections.forEach(connection => {
 		// check if data.type is contained in the users allowed types
-		if(connection.includesType(data.type)){
+		if(data.type === 'all' || connection.includesType(data.type)){
 			connection.send(config.emit_event, data.content);
 		}
 	});
