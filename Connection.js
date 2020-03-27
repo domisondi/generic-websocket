@@ -12,8 +12,8 @@ var Connection = class Connection {
 	
 	checkSend(data){
 		return (data.blog_id && (data.blog_id === true || this.user.includesType(data.blog_id))) || //
-		   	   (data.socket_id && data.socket_id === connection.socket.id) ||
-		   	   (data.user_id && data.user_id === connection.user.id);
+		   	   (data.socket_id && data.socket_id === this.socket.id) ||
+		   	   (data.user_id && data.user_id === this.user.id);
 	}
 	
 	send(event, data){
