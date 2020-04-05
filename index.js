@@ -61,18 +61,19 @@ io.on('connection', function(socket){
 	// log new connection
 	console.log('connection: ', auth_cookie ? "logged in" : "anonymous");
 	
-	// get id and allowed message types
+	// get id
 	var scheme = socket.handshake.secure ? 'https' : (socket.handshake.headers['x-forwarded-scheme'] || 'http')
 	var auth_url = config.auth_full_url ? config.auth_url : (scheme + '://' + socket.handshake.headers.host + config.auth_url);
 	postrequest(auth_url, {cookie: auth_cookie}, result => {
 		// get id
 		var id = result.id;
 	
-		// get types
-		var types = result.types;
+		// get blogs
+		var blogs = socket.handshake.query['blogs'];
+		if(!_.isArray(blogs)) blogs = [blogs];
 	
 		// create new user object
-		var user = new User(id, types);
+		var user = new User(id, blogs);
 
 		// log the user
 		console.log('user: ', user);

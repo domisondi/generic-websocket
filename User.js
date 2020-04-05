@@ -1,12 +1,12 @@
 var User = class User {
-	constructor(id, types) {
+	constructor(id, blogs) {
 		this.id = id;
-		this.types = types;
+		this.blogs = blogs;
 	}
 	
-	includesType(type){
-		var types = this.types || [];
-		return types.includes(type);
+	includesBlog(blog){
+		var blogs = this.blogs || [];
+		return blogs.includes(blog);
 	}
 };
 
