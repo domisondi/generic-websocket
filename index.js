@@ -62,8 +62,8 @@ io.on('connection', function(socket){
 	console.log('connection: ', auth_cookie ? "logged in" : "anonymous");
 	
 	// get id
-	var scheme = socket.handshake.secure ? 'https' : (socket.handshake.headers['x-forwarded-scheme'] || 'http')
-	var auth_url = config.auth_full_url ? config.auth_url : (scheme + '://' + socket.handshake.headers.host + config.auth_url);
+	var scheme = socket.handshake.secure ? 'https' : (socket.handshake.headers['x-forwarded-scheme'] || 'http');
+	var auth_url = config.auth_full_url ? config.auth_url : (scheme + '://' + socket.handshake.headers.host + config.api_url + config.auth_url);
 	postrequest(auth_url, {cookie: auth_cookie}, result => {
 		// get id
 		var id = result.id;
@@ -91,6 +91,11 @@ io.on('connection', function(socket){
 			var index = connections.indexOf(connection);
 			if(index > -1) connections.splice(index, 1);
 		});
+                
+                // handle client initiated event
+                socket.on(config.emit_event, function(data, callback){
+                    
+                });
 	});
 });
 
