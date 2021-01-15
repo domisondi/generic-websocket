@@ -1,6 +1,6 @@
 module.exports = {
-	port: 8080,
-	is_behind_proxy: true,
+	port: 8081,
+	is_behind_proxy: false,
 	socket_io: {path: '/websocket'},
 	emit_event: 'relay',
 	broadcast_route: '/websocket',
