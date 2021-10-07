@@ -65,6 +65,9 @@ io.on('connection', function(socket){
 	var scheme = socket.handshake.secure ? 'https' : (socket.handshake.headers['x-forwarded-scheme'] || 'http');
 	var auth_url = config.auth_full_url ? config.auth_url : (scheme + '://' + socket.handshake.headers.host + config.api_url + config.auth_url);
 	postrequest(auth_url, {cookie: auth_cookie}, result => {
+		// check result
+		if(!result) return socket.disconnect();
+	
 		// get id
 		var id = result.id;
 	
