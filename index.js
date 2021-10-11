@@ -55,7 +55,11 @@ io.on('connection', function(socket){
 	
 	// get auth cookie
 	var auth_cookie = _.find(all_cookies, (c, name) => {
-		return config.auth_cookie_full ? name === config.auth_cookie : name.startsWith(config.auth_cookie);
+		let possibleCookies = config.auth_cookie;
+		if(!_.isArray(possibleCookies)) possibleCookies = [possibleCookies];
+		return _.any(possibleCookies, posC => {
+			return config.auth_cookie_full ? name === posC : name.startsWith(posC);
+		});
 	});
 
 	// log new connection
