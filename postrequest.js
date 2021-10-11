@@ -5,7 +5,10 @@ module.exports = function(url, data, callback){
         url: url,
         form: data
     }, (error, res, body) => {
-        if (error) return callback(null);
+        if (error) {
+        	console.error(error);
+        	return callback(null);
+        }
 
         try {
             body = JSON.parse(body);
