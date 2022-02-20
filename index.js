@@ -77,7 +77,7 @@ io.on('connection', function(socket){
 	
 		// get blogs
 		var blogs = socket.handshake.query['blogs'];
-		if(blogs && !_.isArray(blogs)) blogs = [blogs];
+		if(blogs && !_.isArray(blogs)) blogs = blogs.split(',');
 		else blogs = [];
 	
 		// create new user object
