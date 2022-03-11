@@ -16,7 +16,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http, config.socket_io);
 var port = process.env.PORT || config.port;
-app.use(express.json());
+app.use(express.json({limit: '100mb'}));
 
 // is behind a proxy?
 if(config.is_behind_proxy) app.enable('trust proxy');
