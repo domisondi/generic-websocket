@@ -2,6 +2,7 @@
 var express = require('express');
 var cookie = require('cookie');
 var _ = require('underscore');
+var fs = require('fs');
 var postrequest = require('./postrequest.js');
 
 // load the config
@@ -13,7 +14,16 @@ var User = require('./User');
 
 // create the http and websocket server
 var app = express();
-var http = require('http').Server(app);
+var server; 
+if(config.ssl_cert && config.ssl_key) {
+	require('https').createServer({
+		key: fs.readFileSync(config.ssl_key),
+        cert: fs.readFileSync(config.ssl_cert),
+	}, app);
+}
+else {
+	server = = require('http').Server(app);
+}
 var io = require('socket.io')(http, config.socket_io);
 var port = process.env.PORT || config.port;
 app.use(express.json({limit: '100mb'}));
@@ -115,6 +125,6 @@ io.on('connection', function(socket){
 });
 
 // start the service
-http.listen(port, function(){
+server.listen(port, function(){
 	console.log('Listening on *:' + port);
 });

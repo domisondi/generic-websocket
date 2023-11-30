@@ -1,5 +1,7 @@
 module.exports = {
 	port: 8080,
+	ssl_cert: '',
+	ssl_key: '',
 	is_behind_proxy: true,
 	socket_io: {
 		path: '/websocket',
