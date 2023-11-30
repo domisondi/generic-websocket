@@ -12,5 +12,6 @@ module.exports = {
 	auth_cookie: ['wordpress_logged_in_', 'wordpress_sec_'],
 	auth_url: 'tramp/v1/socket-validate-cookie',
 	auth_full_url: false,
-    api_url: '/wp-json/'
+    api_url: '/wp-json/',
+    allow_origin: '*'
 };

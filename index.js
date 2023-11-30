@@ -18,6 +18,14 @@ var io = require('socket.io')(http, config.socket_io);
 var port = process.env.PORT || config.port;
 app.use(express.json({limit: '100mb'}));
 
+// cors
+if(config.allow_origin) {
+	app.all('*', function(req, res, next) {
+    	res.header("Access-Control-Allow-Origin", config.allow_origin);
+        next();
+    });
+}
+
 // is behind a proxy?
 if(config.is_behind_proxy) app.enable('trust proxy');
 
