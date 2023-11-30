@@ -30,7 +30,7 @@ if(config.ssl_cert && config.ssl_key) {
 else {
 	server = require('http').Server(app);
 }
-var io = require('socket.io')(http, config.socket_io);
+var io = require('socket.io')(server, config.socket_io);
 var port = config.port;
 app.use(express.json({limit: '100mb'}));
 
