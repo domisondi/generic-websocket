@@ -71,6 +71,9 @@ app.post(config.broadcast_route, function(req, res){
 	// send empty response
 	res.end();
 });
+app.get(config.broadcast_route, function(req, res){
+	res.end('hello world');
+});
 
 // on new connection
 io.on('connection', function(socket){
