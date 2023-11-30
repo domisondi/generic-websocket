@@ -22,7 +22,7 @@ if(config.ssl_cert && config.ssl_key) {
 	}, app);
 }
 else {
-	server = = require('http').Server(app);
+	server = require('http').Server(app);
 }
 var io = require('socket.io')(http, config.socket_io);
 var port = process.env.PORT || config.port;
