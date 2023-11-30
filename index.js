@@ -12,6 +12,12 @@ var config = require('./config.js');
 var Connection = require('./Connection');
 var User = require('./User');
 
+// set the port
+config.port = process.env.PORT || config.port;
+
+// log the config
+console.log(config);
+
 // create the http and websocket server
 var app = express();
 var server; 
@@ -25,7 +31,7 @@ else {
 	server = require('http').Server(app);
 }
 var io = require('socket.io')(http, config.socket_io);
-var port = process.env.PORT || config.port;
+var port = config.port;
 app.use(express.json({limit: '100mb'}));
 
 // cors
