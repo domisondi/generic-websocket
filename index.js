@@ -22,7 +22,7 @@ console.log(config);
 var app = express();
 var server; 
 if(config.ssl_cert && config.ssl_key) {
-	require('https').createServer({
+	server = require('https').createServer({
 		key: fs.readFileSync(config.ssl_key),
         cert: fs.readFileSync(config.ssl_cert),
 	}, app);
