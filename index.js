@@ -2,6 +2,7 @@
 var express = require('express');
 var cookie = require('cookie');
 var _ = require('underscore');
+var fs = require('fs');
 var postrequest = require('./postrequest.js');
 
 // load the config
@@ -11,12 +12,35 @@ var config = require('./config.js');
 var Connection = require('./Connection');
 var User = require('./User');
 
+// set the port
+config.port = process.env.PORT || config.port;
+
+// log the config
+console.log(config);
+
 // create the http and websocket server
 var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http, config.socket_io);
-var port = process.env.PORT || config.port;
-app.use(express.json());
+var server; 
+if(config.ssl_cert && config.ssl_key) {
+	server = require('https').createServer({
+		key: fs.readFileSync(config.ssl_key),
+        cert: fs.readFileSync(config.ssl_cert),
+	}, app);
+}
+else {
+	server = require('http').Server(app);
+}
+var io = require('socket.io')(server, config.socket_io);
+var port = config.port;
+app.use(express.json({limit: '100mb'}));
+
+// cors
+if(config.allow_origin) {
+	app.all('*', function(req, res, next) {
+    	res.header("Access-Control-Allow-Origin", config.allow_origin);
+        next();
+    });
+}
 
 // is behind a proxy?
 if(config.is_behind_proxy) app.enable('trust proxy');
@@ -47,6 +71,9 @@ app.post(config.broadcast_route, function(req, res){
 	// send empty response
 	res.end();
 });
+app.get(config.broadcast_route, function(req, res){
+	res.end('hello world');
+});
 
 // on new connection
 io.on('connection', function(socket){
@@ -55,22 +82,29 @@ io.on('connection', function(socket){
 	
 	// get auth cookie
 	var auth_cookie = _.find(all_cookies, (c, name) => {
-		return config.auth_cookie_full ? name === config.auth_cookie : name.startsWith(config.auth_cookie);
+		let possibleCookies = config.auth_cookie;
+		if(!_.isArray(possibleCookies)) possibleCookies = [possibleCookies];
+		return _.any(possibleCookies, posC => {
+			return config.auth_cookie_full ? name === posC : name.startsWith(posC);
+		});
 	});
 
 	// log new connection
 	console.log('connection: ', auth_cookie ? "logged in" : "anonymous");
 	
 	// get id
-	var scheme = socket.handshake.secure ? 'https' : (socket.handshake.headers['x-forwarded-scheme'] || 'http')
-	var auth_url = config.auth_full_url ? config.auth_url : (scheme + '://' + socket.handshake.headers.host + config.auth_url);
+	var scheme = socket.handshake.secure ? 'https' : (socket.handshake.headers['x-forwarded-scheme'] || 'http');
+	var auth_url = config.auth_full_url ? config.auth_url : (scheme + '://' + socket.handshake.headers.host + config.api_url + config.auth_url);
 	postrequest(auth_url, {cookie: auth_cookie}, result => {
+		// check result
+		if(!result) return socket.disconnect();
+	
 		// get id
 		var id = result.id;
 	
 		// get blogs
 		var blogs = socket.handshake.query['blogs'];
-		if(blogs && !_.isArray(blogs)) blogs = [blogs];
+		if(blogs && !_.isArray(blogs)) blogs = blogs.split(',');
 		else blogs = [];
 	
 		// create new user object
@@ -91,10 +125,15 @@ io.on('connection', function(socket){
 			var index = connections.indexOf(connection);
 			if(index > -1) connections.splice(index, 1);
 		});
+                
+                // handle client initiated event
+                socket.on(config.emit_event, function(data, callback){
+                    
+                });
 	});
 });
 
 // start the service
-http.listen(port, function(){
+server.listen(port, function(){
 	console.log('Listening on *:' + port);
 });
