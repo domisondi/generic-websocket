@@ -1,7 +1,7 @@
 platforms/
 plugins/
 node_modules/
-nbproject/private/
+nbproject/
 ./package-lock.json
 dist/
 .vs/

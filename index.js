@@ -77,60 +77,37 @@ app.get(config.broadcast_route, function(req, res){
 
 // on new connection
 io.on('connection', function(socket){
-	// authenticate with the cookie
-	var all_cookies = cookie.parse(socket.handshake.headers.cookie || '');
-	
-	// get auth cookie
-	var auth_cookie = _.find(all_cookies, (c, name) => {
-		let possibleCookies = config.auth_cookie;
-		if(!_.isArray(possibleCookies)) possibleCookies = [possibleCookies];
-		return _.any(possibleCookies, posC => {
-			return config.auth_cookie_full ? name === posC : name.startsWith(posC);
-		});
-	});
-
-	// log new connection
-	console.log('connection: ', auth_cookie ? "logged in" : "anonymous");
-	
 	// get id
-	var scheme = socket.handshake.secure ? 'https' : (socket.handshake.headers['x-forwarded-scheme'] || 'http');
-	var auth_url = config.auth_full_url ? config.auth_url : (scheme + '://' + socket.handshake.headers.host + config.api_url + config.auth_url);
-	postrequest(auth_url, {cookie: auth_cookie}, result => {
-		// check result
-		if(!result) return socket.disconnect();
+	var id = socket.handshake.query['user_id'] || '';
 	
-		// get id
-		var id = result.id;
+	// get blogs
+	var blogs = socket.handshake.query['blogs'];
+	if(blogs && !_.isArray(blogs)) blogs = blogs.split(',');
+	else blogs = [];
 	
-		// get blogs
-		var blogs = socket.handshake.query['blogs'];
-		if(blogs && !_.isArray(blogs)) blogs = blogs.split(',');
-		else blogs = [];
+	// create new user object
+	var user = new User(id, blogs);
 	
-		// create new user object
-		var user = new User(id, blogs);
-
-		// log the user
-		console.log('user: ', user);
-
-		// create new connection object
-		var connection = new Connection(socket, user);
+	// create new connection object
+	var connection = new Connection(socket, user);
 	
-		// add to connections array
-		connections.push(connection);
+	// add to connections array
+	connections.push(connection);
 		
-		// handle disconnect
-		socket.on('disconnect', () => {
-			// remove the connection
-			var index = connections.indexOf(connection);
-			if(index > -1) connections.splice(index, 1);
-		});
-                
-                // handle client initiated event
-                socket.on(config.emit_event, function(data, callback){
-                    
-                });
+	// log new connection
+	console.log('new connection: ' + (id ? id : 'anonymous') + ', blogs: ' + blogs.join(';'));
+		
+	// handle disconnect
+	socket.on('disconnect', () => {
+		// remove the connection
+		var index = connections.indexOf(connection);
+		if(index > -1) connections.splice(index, 1);
 	});
+                
+    // handle client initiated event
+    socket.on(config.emit_event, function(data, callback){
+                    
+    });
 });
 
 // start the service
