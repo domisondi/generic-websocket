@@ -11,7 +11,7 @@ var Connection = class Connection {
 	}
 	
 	checkSend(data){
-		return (data.listener && (data.listener === true || this.user.includesBlog(data.listener.type, data.listener.value))) ||
+		return (data.listener && (data.listener === true || this.user.isListeningTo(data.listener.type, data.listener.value))) ||
 		   	   (data.socket_id && data.socket_id === this.socket.id) ||
 		   	   (data.user_id && data.user_id === this.user.id);
 	}
