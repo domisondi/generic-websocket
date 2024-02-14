@@ -1,14 +1,19 @@
 const _ = require('underscore');
 
 var User = class User {
-	constructor(id, blogs) {
+	constructor(id, listeners) {
 		this.id = id;
-		this.blogs = _.map(blogs, b => b + ''); // make sure it is stored as strings
+		this.listeners = listeners;
 	}
 	
-	includesBlog(blog){
-		var blogs = this.blogs || [];
-		return blogs.includes(blog + ''); // compare as strings
+	isListeningTo(type, value){
+		// get the listeners of the type
+		let listeners = this.listeners[type] || [];
+		if(!_.isArray(listeners)) listeners = listeners.split(',');
+		// make sure the listeners and value are treated as strings
+		listeners = _.map(listeners, l => l + '');
+		value = value + '';
+		return _.contains(listeners, value);
 	}
 };
 

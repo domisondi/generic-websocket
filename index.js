@@ -80,13 +80,12 @@ io.on('connection', function(socket){
 	// get id
 	var id = socket.handshake.query['user_id'] || '';
 	
-	// get blogs
-	var blogs = socket.handshake.query['blogs'];
-	if(blogs && !_.isArray(blogs)) blogs = blogs.split(',');
-	else blogs = [];
+	// get listeners
+	var listeners = socket.handshake.query['listeners'];
+	if(!_.isObject(listeners)) listeners = {};
 	
 	// create new user object
-	var user = new User(id, blogs);
+	var user = new User(id, listeners);
 	
 	// create new connection object
 	var connection = new Connection(socket, user);
@@ -95,7 +94,7 @@ io.on('connection', function(socket){
 	connections.push(connection);
 		
 	// log new connection
-	console.log('new connection: ' + (id ? id : 'anonymous') + ', blogs: ' + blogs.join(';'));
+	console.log('new connection: ' + (id ? id : 'anonymous') + ', listeners: ' + JSON.stringify(listeners));
 		
 	// handle disconnect
 	socket.on('disconnect', () => {
