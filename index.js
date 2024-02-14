@@ -82,6 +82,11 @@ io.on('connection', function(socket){
 	
 	// get listeners
 	var listeners = socket.handshake.query['listeners'];
+	try {
+		listeners = JSON.parse(listeners);
+	} catch(err){
+		listeners = {};
+	}
 	if(!_.isObject(listeners)) listeners = {};
 	
 	// create new user object
