@@ -10,3 +10,4 @@ Ghost.njsproj
 package-lock.json
 npm-debug.log
 config.js
+websocket_storage/
