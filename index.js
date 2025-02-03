@@ -197,7 +197,9 @@
 				await webPush.sendNotification(sub, JSON.stringify({
 					title: data.title,
 					message: data.message,
-					url: data.url || ''
+					url: data.url || '',
+					icon: data.icon || '',
+					data: data.data
 				}));
 			} catch(err){
 				// depending on the error unsubscribe the user
