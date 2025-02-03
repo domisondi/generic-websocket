@@ -37,6 +37,7 @@
 		app.all('*', function(req, res, next) {
 			res.header("Access-Control-Allow-Origin", config.allow_origin);
 			res.header("Access-Control-Allow-Headers", '*');
+			res.header("Access-Control-Allow-Credentials", 'false');
 			next();
 		});
 	}

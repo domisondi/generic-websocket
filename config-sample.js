@@ -8,7 +8,8 @@ module.exports = {
 		path: '/websocket',
 		pingTimeout: 60000,
 		cors: {
-			origin: '*'
+			origin: '*',
+			credentials: false
 		}
 	},
 	emit_event: 'relay',
